@@ -28,16 +28,18 @@ def check_available(perl):
 def remove_perl(perl):
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
-    p2 = Popen([perlbrew, 'uninstall', '-q', perl], stdin=PIPE)
+    p2 = Popen([perlbrew, 'uninstall', '-q', perl], stdin=PIPE, stdout=PIPE)
     p2.stdin.write('y')
-    return True
+    out = p2.communicate()[0]
+    return out
 
 def install_perl(perl, perlbrew_root):
     os.environ['PERLBREW_ROOT'] == perlbrew_root
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
-    Popen([perlbrew, 'install', '-q', perl, perlbrew_root])
-    return True
+    p2 = Popen([perlbrew, 'install', '-q', perl, perlbrew_root], stdout=PIPE)
+    out = p2.communicate()[0]
+    return out
 
 def main():
     module = AnsibleModule(
@@ -72,7 +74,7 @@ def main():
     
     if module.params['state'] == 'absent':
         if is_installed:
-            remove_perl(module.params['name'])
+            out = remove_perl(module.params['name'])
             module.exit_json(changed=True)
         else:
             module.exit_json(changed=False)
