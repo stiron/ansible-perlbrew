@@ -70,12 +70,14 @@ def main():
 
         if not is_installed and is_available:
             install_perl(module.params['name'], module.params['perlbrew_root'])
-            module.exit_json(changed=True)
+            module.exit_json(changed=True, msg="Perl version "
+                    + module.params['name'] + " is now installed")
     
     if module.params['state'] == 'absent':
         if is_installed:
-            out = remove_perl(module.params['name'])
-            module.exit_json(changed=True)
+            remove_perl(module.params['name'])
+            module.exit_json(changed=True, msg="Perl version "
+                    + module.params['name'] + " is now uninstalled")
         else:
             module.exit_json(changed=False)
 
