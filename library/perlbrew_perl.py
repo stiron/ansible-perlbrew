@@ -4,6 +4,7 @@ from ansible.module_utils.basic import AnsibleModule
 from subprocess import Popen
 from subprocess import PIPE
 import os.path
+import os
 
 def check_installed(root, name):
     path = root + "/perlbrew/perls/" + name
@@ -32,10 +33,10 @@ def remove_perl(perl):
     return True
 
 def install_perl(perl, perlbrew_root):
+    os.environ['PERLBREW_ROOT'] == perlbrew_root
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
-    Popen([perlbrew, 'install', '-q', perl,
-        '--destdir', perlbrew_root])
+    Popen([perlbrew, 'install', '-q', perl, perlbrew_root])
     return True
 
 def main():
