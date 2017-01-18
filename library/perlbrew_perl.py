@@ -8,6 +8,7 @@ import os
 
 def check_installed(root, name):
     path = root + "/perlbrew/perls/" + name
+
     if os.path.isdir(path):
         return True
     else:
@@ -28,17 +29,22 @@ def check_available(perl):
 def remove_perl(perl):
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
+
     p2 = Popen([perlbrew, 'uninstall', '-q', perl], stdin=PIPE, stdout=PIPE)
     p2.stdin.write('y')
     out = p2.communicate()[0]
+
     return out
 
 def install_perl(perl, perlbrew_root):
     os.environ['PERLBREW_ROOT'] == perlbrew_root
+
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
+
     p2 = Popen([perlbrew, 'install', '-q', perl, perlbrew_root], stdout=PIPE)
     out = p2.communicate()[0]
+
     return out
 
 def main():
