@@ -30,9 +30,10 @@ def remove_perl(perl):
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
 
-    p2 = Popen([perlbrew, 'uninstall', '-q', perl], stdin=PIPE, stdout=PIPE)
+    p2 = Popen([perlbrew, 'uninstall', '-q', perl],
+            stdin=PIPE, stdout=PIPE, stderr=PIPE)
     p2.stdin.write('y')
-    out = p2.communicate()[0]
+    out, err = p2.communicate()
 
     return out
 
@@ -42,10 +43,11 @@ def install_perl(perl, perlbrew_root):
     p1 = Popen(['which', 'perlbrew'], stdout=PIPE)
     perlbrew = p1.communicate()[0].rstrip()
 
-    p2 = Popen([perlbrew, 'install', '-q', perl, perlbrew_root], stdout=PIPE)
-    out = p2.communicate()[0]
+    p2 = Popen([perlbrew, 'install', '-q', perl, perlbrew_root],
+            stdout=PIPE, stderr=PIPE)
+    out, err = p2.communicate()
 
-    return out
+    return out, err
 
 def main():
     module = AnsibleModule(
@@ -75,15 +77,22 @@ def main():
                     + module.params['name'] + " is not available")
 
         if not is_installed and is_available:
-            install_perl(module.params['name'], module.params['perlbrew_root'])
-            module.exit_json(changed=True, msg="Perl version "
-                    + module.params['name'] + " is now installed")
+            out, err = install_perl(module.params['name'],
+                    module.params['perlbrew_root'])
+            if not err:
+                module.exit_json(changed=True, msg="Perl version "
+                        + module.params['name'] + " is now installed")
+            else:
+                module.fail_json(msg="ERROR: " + err)
     
     if module.params['state'] == 'absent':
         if is_installed:
-            remove_perl(module.params['name'])
-            module.exit_json(changed=True, msg="Perl version "
-                    + module.params['name'] + " is now uninstalled")
+            out, err = remove_perl(module.params['name'])
+            if not err:
+                module.exit_json(changed=True, msg="Perl version "
+                        + module.params['name'] + " is now uninstalled")
+            else:
+                module.fail_json(msg="ERROR: " + err)
         else:
             module.exit_json(changed=False)
 
