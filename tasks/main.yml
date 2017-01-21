@@ -1,0 +1,10 @@
+---
+- name: Install perlbrew perls
+  become_user: "{{ perlbrew_user }}"
+  perlbrew_perl:
+    name: "{{ item }}"
+    state: present
+    perlbrew_root: "{{ perlbrew_root }}"
+  with_items: "{{ perlbrew_perls }}"
+  tags:
+    - perlbrew
