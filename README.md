@@ -2,28 +2,22 @@
 
 ## Requirements
 
-This module requires Ansible 2.x version.
+This module requires Ansible >=2.2 version.
 
 ## Role variables
 
 ```
-perlbrew_perl:
-  name:
-    - perl-5.24.1
-    - perl-5.22.3
-  perlbrew_root: /home/tmolnar/.perl5
-  state: present
+perlbrew_user - the user to install perls to
+perlbrew_root - destination directory fo install perls to
+perlbrew_perls - a list of perl versions to be installed
 ```
-
-The `become_user` should be set on task level!
 
 ## Examples
 
 ```
 - hosts: Desktops 
   roles:
-    - { role: perlbrew,
-        name: ['perl-5.24.1', 'perl-5.22.3'], perlbrew_root: /home/tmolnar/.perl5 }
+    - { role: perlbrew }
 ```
 
 ## Dependencies
@@ -36,4 +30,4 @@ MIT
 
 ## Author
 
-Tamas Molnar - tmolnar0831@gmail.com
+Tamas Molnar <tmolnar0831@gmail.com>
