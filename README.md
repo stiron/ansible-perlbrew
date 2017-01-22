@@ -32,8 +32,8 @@ The `become_user` should be set on task level!
 
 ## License
 
-BSD
+MIT
 
 ## Author
 
-Tamas Molnar
+Tamas Molnar - tmolnar0831@gmail.com
