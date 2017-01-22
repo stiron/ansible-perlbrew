@@ -8,7 +8,7 @@ This module requires Ansible >=2.2 version.
 
 ```
 perlbrew_user - the user to install perls to
-perlbrew_root - destination directory fo install perls to
+perlbrew_root - destination directory to install perls to
 perlbrew_perls - a list of perl versions to be installed
 ```
 
